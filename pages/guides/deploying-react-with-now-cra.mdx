@@ -1,0 +1,55 @@
+import Guide from '~/components/layout/guide'
+import Snippet from '~/components/snippet'
+import { InlineCode } from '~/components/text/code'
+import Caption from '~/components/text/caption'
+import { Image } from '~/components/media'
+
+export const meta = {
+  title: 'Deploy a React App with ZEIT Now and Create React App',
+  description:
+    'Create your Create React App project and deploy it with ZEIT Now.',
+  published: '2019-02-06T12:00:00.860Z',
+  authors: ['timothy', 'grovesjoseph'],
+  url: '/guides/deploying-react-with-now-cra',
+  example: 'create-react-app-functions',
+  demo: 'https://create-react-app.now-examples.now.sh',
+  editUrl: 'pages/guides/deploying-react-with-now-cra.mdx',
+  lastEdited: '2019-11-18T14:07:17.000Z'
+}
+
+[React](https://reactjs.org/) is a popular open-source JavaScript framework, maintained by Facebook, for easily creating interactive [single-page apps](https://en.wikipedia.org/wiki/Single-page_application) (SPAs).
+
+In this guide, we will cover how to set up a React app with [Create React App](https://facebook.github.io/create-react-app/docs/getting-started) (CRA) and how to deploy it with [ZEIT Now](/docs/v2).
+
+## Step 1: Set Up Your React Project
+
+Get started by setting up a React app using the [Create React App (CRA)](https://facebook.github.io/create-react-app/) CLI tool. With this, you can generate a project to get up and running with React.
+
+Using [npm](https://www.npmjs.com), you can setup a React app with CRA with the following command in your terminal:
+
+<Snippet dark text="npm init react-app my-react-app && cd my-react-app" />
+<Caption>Bootstrapping a React app with Create React App through npm.</Caption>
+
+If you would prefer to use another method, see the [Quick Start documentation for CRA](https://facebook.github.io/create-react-app/docs/getting-started#quick-start).
+
+## Step 2: Deploying Your React Project with ZEIT Now
+
+With your React application set up, it is ready to deploy with [Now](/docs/v2).
+
+If you have not yet installed Now, you can do so by [installing Now CLI](/download).
+
+To deploy your React project, use the following [Now CLI](/download) command from your terminal:
+
+<Snippet dark text="now" />
+
+<Caption>
+  Deploying the app with the <InlineCode>now</InlineCode> command.
+</Caption>
+
+If you want to deploy your React project when you push to a Git repository, you can use either [Now for GitHub](/docs/v2/integrations/now-for-github/) or [Now for GitLab](/docs/v2/integrations/now-for-gitlab/) to have your project automatically deployed on every push, and the [production domain](https://zeit.co/docs/v2/custom-domains/#adding-a-domain) updated on push to master.
+
+export default ({ children }) => <Guide meta={meta}>{children}</Guide>
+
+export const config = {
+  amp: 'hybrid'
+}

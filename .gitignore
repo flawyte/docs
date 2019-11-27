@@ -1,15 +1,19 @@
 # build output
 .next
 out
-lib/data/now-examples.json
+dist
+public/sitemap.xml
 
 # dependencies
 node_modules
 deploy-server/node_modules
 package-lock.json
+yarn.lock
 
 # logs
-npm-debug.log
+*.log
 
 # other
 .DS_Store
+.idea
+.vscode

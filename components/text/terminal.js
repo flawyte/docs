@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { GenericLink } from './link'
+import Link from './link'
 
 export const TerminalInput = ({ children }, { darkBg = false }) => (
   <div className={darkBg ? 'dark' : ''}>
@@ -16,7 +16,7 @@ export const TerminalInput = ({ children }, { darkBg = false }) => (
       {`
         div {
           border: 1px solid #eaeaea;
-          color: #bd10e0;
+          color: #000;
           font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
             DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace,
             serif;
@@ -27,10 +27,12 @@ export const TerminalInput = ({ children }, { darkBg = false }) => (
           -webkit-overflow-scrolling: touch;
           white-space: pre;
           overflow: auto;
+          background: white;
         }
 
         div span {
           display: block;
+          margin-right: 24px;
         }
 
         div span::before {
@@ -94,10 +96,10 @@ export class TerminalOutput extends React.Component {
 
 export const TerminalLink = props => (
   <span>
-    <GenericLink {...props} />
+    <Link {...props} />
     <style jsx>
       {`
-        span :gloabl(a) {
+        span :global(a) {
           text-decoration: underline;
         }
       `}

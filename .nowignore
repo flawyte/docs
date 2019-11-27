@@ -1,0 +1,9 @@
+node_modules
+dist
+*.log
+LICENSE.md
+README.md
+.next
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+.github

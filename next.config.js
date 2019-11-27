@@ -1,26 +1,41 @@
-const {
-  PHASE_DEVELOPMENT_SERVER,
-  PHASE_PRODUCTION_BUILD
-} = require('next/constants')
+const isProd = process.env.NODE_ENV === 'production'
 
-module.exports = phase => {
-  const config = {
-    // Allow mdx and md files to be pages
-    pageExtensions: ['jsx', 'js', 'mdx', 'md'],
-
-    // assetPrefix will be set dynamically in ./server.js
-    assetPrefix: ''
+const rehypePrism = require('@mapbox/rehype-prism')
+// Adds github.com/mdx-js/mdx to Next.js
+const withMDX = require('@next/mdx')({
+  extension: /\.(md|mdx)?$/,
+  options: {
+    hastPlugins: [rehypePrism]
   }
+})
 
-  // This makes sure we only require build-time plugins at build time
-  if (phase !== PHASE_DEVELOPMENT_SERVER && phase !== PHASE_PRODUCTION_BUILD) {
+module.exports = withMDX({
+  target: 'serverless',
+
+  experimental: {
+    css: true
+  },
+
+  exportTrailingSlash: true,
+
+  // Allow mdx and md files to be pages
+  pageExtensions: ['jsx', 'js', 'mdx', 'md'],
+
+  assetPrefix: isProd ? '/docs' : '',
+
+  env: {
+    VERSION: require('./package.json').version,
+    API_URL: process.env.API_URL,
+    IMAGE_ASSETS_URL: 'https://assets.zeit.co/image/upload/front',
+    VIDEO_ASSETS_URL: 'https://assets.zeit.co/video/upload/front',
+    RAW_ASSETS_URL: 'https://assets.zeit.co/raw/upload/front',
+    ASSETS: isProd ? '/docs/static' : '/static'
+  },
+
+  webpack(config, { isServer }) {
+    if (isServer) {
+      require('./scripts/generate-site-map')
+    }
     return config
   }
-
-  // Adds github.com/mdx-js/mdx to Next.js
-  const withMDX = require('@zeit/next-mdx')({
-    extension: /\.(md|mdx)?$/
-  })
-
-  return withMDX(config)
-}
+})

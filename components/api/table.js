@@ -1,5 +1,7 @@
 import React from 'react'
 import debounce from 'lodash.debounce'
+import { RequestHeader } from '~/components/text/code'
+import CircledQuestion from '~/components/icons/circled-question'
 
 class ScrollerContainer extends React.PureComponent {
   state = { hasMoreScroll: false }
@@ -50,6 +52,7 @@ class ScrollerContainer extends React.PureComponent {
         <style jsx>{`
           main {
             position: relative;
+            margin-bottom: 24px;
           }
           .scroller {
             overflow-x: auto;
@@ -151,9 +154,9 @@ export function Cell({ children, isHead, center }) {
           th {
             padding: 12px 20px 12px 0;
             color: #999;
-            font-size: 12px;
+            font-size: var(--font-size-small);
+            line-height: var(--line-height-small);
             font-weight: normal;
-            line-height: 24px;
             text-align: left;
             text-transform: uppercase;
             vertical-align: top;
@@ -173,15 +176,20 @@ export function Cell({ children, isHead, center }) {
         {children}
         <style jsx>{`
           td {
-            border-bottom: 1px solid #eaeaea;
-            font-size: 14px;
-            line-height: 24px;
+            border-bottom: 1px solid var(--accents-2);
+            font-size: var(--font-size-small);
+            line-height: var(--line-height-small);
             padding: 12px 20px 12px 0;
             vertical-align: top;
           }
           td:last-child {
             padding-right: 0;
           }
+
+          :global(tr:last-child) td {
+            border-bottom-color: transparent;
+          }
+
           .center {
             text-align: center;
           }
@@ -194,9 +202,9 @@ export function Cell({ children, isHead, center }) {
 export function TypeCell({ children, ...props }) {
   return (
     <Cell {...props}>
-      <a className={props.isHead ? 'head' : null} href="/api#api-basics/types">
+      <a className={props.isHead ? 'head' : null} href="#api-basics/types">
         <span>{children}</span>
-        {props.isHead ? <QuestionInCircle /> : null}
+        {props.isHead ? <CircledQuestion /> : null}
         <style jsx>
           {`
             a {
@@ -238,6 +246,16 @@ export function BoldCell({ children, ...props }) {
   )
 }
 
+export function HeaderCell({ children, ...props }) {
+  return (
+    <Cell {...props}>
+      <RequestHeader>
+        <b>{children}</b>
+      </RequestHeader>
+    </Cell>
+  )
+}
+
 export function BooleanCell({ status = false, ...props }) {
   return <Cell {...props}>{status ? 'Yes' : 'No'}</Cell>
 }
@@ -256,41 +274,4 @@ export function FullWidthCell(props) {
       `}</style>
     </Cell>
   )
-}
-
-class QuestionInCircle extends React.Component {
-  shouldComponentUpdate() {
-    return false
-  }
-
-  render() {
-    return (
-      <svg
-        width="16px"
-        height="16px"
-        viewBox="0 0 16 16"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-      >
-        <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-          <g transform="translate(-254.000000, -132.000000)">
-            <g transform="translate(255.000000, 133.000000)">
-              <circle stroke="#EAEAEA" cx="7" cy="7" r="7" />
-              <text
-                fontFamily="SFUIText-Bold, SF UI Text"
-                fontSize="10"
-                fontWeight="bold"
-                fill="#999999"
-              >
-                <tspan x="4.25" y="10.5">
-                  ?
-                </tspan>
-              </text>
-            </g>
-          </g>
-        </g>
-      </svg>
-    )
-  }
 }

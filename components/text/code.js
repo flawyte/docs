@@ -1,8 +1,24 @@
 import PropTypes from 'prop-types'
+import refractor from 'refractor'
+import rehype from 'rehype'
 
-export const Code = ({ children, syntax }, { darkBg } = {}) => (
-  <pre className={(darkBg ? 'dark' : '') + (syntax ? ` ${syntax}` : '')}>
-    <code>{children}</code>
+export const Code = ({ children, lang }, { darkBg } = {}) => (
+  <pre className={(darkBg ? 'dark' : '') + (lang ? ` ${lang}` : '')}>
+    {lang ? (
+      <code
+        className={`language-${lang}`}
+        dangerouslySetInnerHTML={{
+          __html: rehype()
+            .stringify({
+              type: 'root',
+              children: refractor.highlight(children, lang)
+            })
+            .toString()
+        }}
+      />
+    ) : (
+      <code>{children}</code>
+    )}
     <style jsx>
       {`
         pre {
@@ -12,9 +28,10 @@ export const Code = ({ children, syntax }, { darkBg } = {}) => (
           white-space: pre;
           overflow: auto;
           -webkit-overflow-scrolling: touch;
+          background: white;
         }
         code {
-          color: #bd10e0;
+          color: #000;
           font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
             DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace,
             serif;
@@ -23,11 +40,12 @@ export const Code = ({ children, syntax }, { darkBg } = {}) => (
         }
         pre.dark {
           border-color: #333;
+          background: transparent;
         }
         .dark code {
           color: #fff;
         }
-        .dark.shell code {
+        .dark.bash code {
           color: #50e3c2;
         }
       `}
@@ -39,13 +57,15 @@ Code.contextTypes = {
   darkBg: PropTypes.bool
 }
 
-export const InlineCode = ({ children, noWrap }) => (
+const literal = '`'
+
+export const InlineCode = ({ children, noWrap, color }) => (
   <code className={noWrap && 'no-wrap'}>
     {children}
     <style jsx>
       {`
         code {
-          color: #bd10e0;
+          color: ${color ? color : '#bd10e0'};
           font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
             DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace,
             serif;
@@ -58,13 +78,19 @@ export const InlineCode = ({ children, noWrap }) => (
         }
 
         code::before {
-          content: '\`';
+          content: '${literal}';
         }
 
         code::after {
-          content: '\`';
+          content: '${literal}';
         }
       `}
     </style>
   </code>
+)
+
+export const RequestHeader = ({ children, ...props }) => (
+  <InlineCode noWrap color="#0076FF" {...props}>
+    {children}
+  </InlineCode>
 )

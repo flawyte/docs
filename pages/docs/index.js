@@ -1,3 +1,7 @@
-import IntroductionToNow from './getting-started/introduction-to-now.md'
+import Introduction from './v2/introduction.mdx'
 
-export default IntroductionToNow
+export default Introduction
+
+export const config = {
+  amp: 'hybrid'
+}

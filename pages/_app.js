@@ -1,26 +1,44 @@
-import App, { Container } from 'next/app'
+import '~/styles/global.css'
+
+import App from 'next/app'
 import React from 'react'
-import authenticate from '../lib/authenticate'
+import authenticate from '~/lib/authenticate'
+import { UserContext } from '~/lib/user-context'
+import Head from 'next/head'
+import { fullStoryScript } from '~/lib/scripts'
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {}
-    const req = ctx.req
+  state = {
+    user: {},
+    userLoaded: false
+  }
 
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
-    }
-
-    const { user } = await authenticate({ req })
-    return { pageProps, user }
+  async componentDidMount() {
+    const { user } = await authenticate()
+    this.setState({
+      user,
+      userLoaded: true
+    })
   }
 
   render() {
-    const { Component, pageProps, user } = this.props
+    const { Component, pageProps } = this.props
     return (
-      <Container>
-        <Component {...pageProps} user={user} />
-      </Container>
+      <UserContext.Provider value={this.state}>
+        <Head>
+          {typeof document !== 'undefined' &&
+            document.cookie &&
+            document.cookie.indexOf('token=') > -1 && (
+              <script
+                async
+                dangerouslySetInnerHTML={{
+                  __html: fullStoryScript
+                }}
+              />
+            )}
+        </Head>
+        <Component {...pageProps} />
+      </UserContext.Provider>
     )
   }
 }
